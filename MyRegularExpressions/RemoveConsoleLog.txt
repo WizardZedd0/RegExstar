@@ -1,0 +1,2 @@
+Name= RemoveConsoleLog
+Needle=im)^\s*consoleLog.*$
