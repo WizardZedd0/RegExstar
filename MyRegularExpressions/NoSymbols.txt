@@ -1,2 +1,0 @@
-Name= NoSymbols
-Needle=[^a-zA-Z0-9\s]
