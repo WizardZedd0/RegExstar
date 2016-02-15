@@ -1,5 +1,5 @@
 #NoEnv
-#include C:\Users\Robert\Documents\AutoHotkey\Lib\ConsoleLog.ahk
+#include C:\Users\Robert\Documents\AutoHotkey\Lib\Log.ahk
 #SingleInstance, force
 ; Title = RegExstar
 ; Author = WizardZedd
@@ -379,7 +379,7 @@ return
 ; ========== Add Common Expressions From Tool Box ==========
 AddFromTB:
    ; todo - get cursor position, figure out text to add, set cursor position
-   ConsoleLog("Received click on button " A_guicontrol)
+   Log("Received click on button " A_guicontrol)
    addToRegEx(a_guicontrol)
 return
 
@@ -388,7 +388,7 @@ return
 ; ============================================
 PatternDetails:
    ; Header
-   ConsoleLog("Loading Pattern Details Mode: " outPutRegMode)
+   Log("Loading Pattern Details Mode: " outPutRegMode)
    gui, pat: default
    LV_Delete()
    If (outPutRegMode = "P") {
@@ -410,7 +410,7 @@ PatternDetails:
   PatternEdit=
 return
 patGuiSize:
-ConsoleLog("Sizing pattern gui")
+Log("Sizing pattern gui")
 w:=A_GuiWidth-15
 h:=A_GuiHeight-15
 guicontrol, pat: move, PatternLV, w%w% h%h%
@@ -643,7 +643,7 @@ formatRegex(x, toText:=true) {
    } else {		; Convert to a regex variable form
       x:=options . RegExReplace(RegExReplace(x, "``", "\"), "(?<!\\)""+", """")
    }
-   consoleLog("Formatted Regex " x (toText ? "`nText Form" : "`nRegEx Form ") "`nOptions: " options)
+   Log("Formatted Regex " x (toText ? "`nText Form" : "`nRegEx Form ") "`nOptions: " options)
    ;~ MsgBox, % x
    return x
 }
@@ -701,7 +701,7 @@ SelectHaystack(start, match) {
       return
    RegExReplace(substr(RegHaystack, 1, start), "`n",, lfCount)
    RegExReplace(match, "`n",, withinlfCount)
-   ConsoleLog("Selecting Haystack Match: " match " LFcount: " lfCount)
+   Log("Selecting Haystack Match: " match " LFcount: " lfCount)
    guicontrol, main: focus, RegHaystack
    SendMessage, 0xB1, % start+lfCount-1, % start+strlen(match)-1+lfCount+withinlfCount,, ahk_id %HaystackHnd% ; EM_SETSEL
     SendMessage, 0xB7, 0, 0,, ahk_id %HaystackHnd% ; EM_SCROLLCARET
@@ -774,9 +774,9 @@ showToolBox(show=-1) ; Toggle
       winGetPos, x, y,, h, ahk_id %MainHWND%
    if(!toolboxIsShown && show != 0){
       menu, ViewMenu, check, ToolBox
-      consoleLog("Main height:" h)
+      Log("Main height:" h)
       if(h < 350) {
-         consoleLog("TOO small")
+         Log("TOO small")
          h:=400
          WinMove, ahk_id %MainHWND%, , %x%, %y%,, %h%
       }
@@ -823,7 +823,7 @@ WM_MOUSEMOVE()
 
     DisplayToolTip:
       ; TAB 1 - COMMON
-      ConsoleLog("Displaying Tooltip for " CurrControl)
+      Log("Displaying Tooltip for " CurrControl)
       if(CurrControl = ".") {
       ToolTip % CurrControl " By default, a dot matches any single`n character which is not part of a newline (``r``n) sequence, but`n this can be changed by using the DotAll (s), linefeed (``n),`n carriage return (``r), ``a or (*ANYCRLF) options. For example,`n ab. matches abc and abz and ab_."
       } else if(CurrControl = "*") {
@@ -960,11 +960,11 @@ addToRegEx(item) {
       return
     else
       RegNeedle := RegNeedle . append
-   consoleLog("Options: " opt " Anchor: " anchor)
+   Log("Options: " opt " Anchor: " anchor)
    guicontrol, main:, RegNeedle, %RegNeedle%
    guicontrol, main: focus, RegNeedle
    SendMessage, 0xB1, % pos:=(cursorOffset <= 0) ? strlen(RegNeedle)+cursorOffset : cursorOffset, pos,, ahk_id %RegNeedleHWND% ; EM_SETSEL	
-   consoleLog("Set RegNeedle " RegNeedle " Appended: " append " CursorOffset was " cursorOffset)
+   Log("Set RegNeedle " RegNeedle " Appended: " append " CursorOffset was " cursorOffset)
 }
 ; ==========================================================================================
 
@@ -1026,7 +1026,7 @@ AutoXYWH(DimSize, cList*){       ; http://ahkscript.org/boards/viewtopic.php?t=1
     } else if (update) {
       GuiControlGet, i, %A_Gui%:Pos, %ctrl%
       cInfo[ctrlID].x := ix ,  cInfo[ctrlID].y:=iy , cInfo[ctrlID].w:=iw , cInfo[ctrlID].h:=ih, cInfo[ctrlID].gw:=lgw, cInfo[ctrlID].gh:=lgh
-      consoleLog(A_ThisFunc " Update " ctrlID " x" ix " y" iy " w" iw " h" ih)
+      Log(A_ThisFunc " Update " ctrlID " x" ix " y" iy " w" iw " h" ih)
     } Else If ( cInfo[ctrlID].a.1) {
         dgx := dgw := lgw  - cInfo[ctrlID].gw  , dgy := dgh := lgh - cInfo[ctrlID].gh
         For i, dim in cInfo[ctrlID]["a"]
@@ -1039,18 +1039,18 @@ AutoXYWHChildGUI(DimSize, cList*){
   static cInfo := {}
   If (instr(DimSize, "reset")) {
     cInfo := {}
-   consoleLog(A_ThisFunc ": Resetting")
+   Log(A_ThisFunc ": Resetting")
    }
   For i, ctrl in cList {
     ctrlID := ctrl
-   ;~ consoleLog("Ctrl " ctrlID " x is " cInfo[ctrlID].x)
+   ;~ Log("Ctrl " ctrlID " x is " cInfo[ctrlID].x)
     If ( cInfo[ctrlID].x = "" ){
       ControlGetPos, ix, iy, iw, ih, , ahk_id %ctrlID%
       ID := DllCall("GetParent", UInt,WinExist("ahk_id" ctrlID)), ID := !ID ? WinExist("ahk_id" ctrlID) : ID  ; Get Parent
       VarSetCapacity(rc, 16)
       DllCall("GetClientRect", "uint", ID, "uint", &rc)	; Client pos
       pw := NumGet(rc, 8, "int"), ph := NumGet(rc, 12, "int") 
-      consoleLog(A_ThisFunc ": Window found at x" ix " y" iy " w" iw " h" ih ". Parent is " ID " found dims: " pw "x" ph) 
+      Log(A_ThisFunc ": Window found at x" ix " y" iy " w" iw " h" ih ". Parent is " ID " found dims: " pw "x" ph) 
         fx := fy := fw := fh := 0
         For i, dim in (a := StrSplit(RegExReplace(DimSize, "i)[^xywh]")))
             If !RegExMatch(DimSize, "i)" dim "\s*\K[\d.-]+", f%dim%)
@@ -1059,7 +1059,7 @@ AutoXYWHChildGUI(DimSize, cList*){
     }Else If ( cInfo[ctrlID].a.1) {
         dgx := dgw := A_GuiWidth  - cInfo[ctrlID].gw  , dgy := dgh := A_GuiHeight - cInfo[ctrlID].gh
       controlMove,, % (dgx * cInfo[ctrlID]["fx"] + cInfo[ctrlID]["x"]), % (dgy * cInfo[ctrlID]["fy"] + cInfo[ctrlID]["y"]), % (dgw * cInfo[ctrlID]["fw"] + cInfo[ctrlID]["w"]), % (dgh * cInfo[ctrlID]["fh"] + cInfo[ctrlID]["h"]), ahk_id %ctrlID%
-      consoleLog(A_ThisFunc ": Moving Win " ctrlID " to x" x " y" y " w" w " h" h " . GuiW: " A_GuiWidth " GuiHeight: " A_GuiHeight) 
+      Log(A_ThisFunc ": Moving Win " ctrlID " to x" x " y" y " w" w " h" h " . GuiW: " A_GuiWidth " GuiHeight: " A_GuiHeight) 
 } } }
 
 
@@ -1099,9 +1099,9 @@ WM_MOVE()
    static lpx, lpy
    WinGetPos, x,y,,, ahk_id %MainHWND% 
    WinGetPos, mx, my,mw,mh, ahk_id %PatHWND%
-   ;~ ConsoleLog(A_ThisFunc ": Lastx:" lpx " LastY:" lpy)
+   ;~ Log(A_ThisFunc ": Lastx:" lpx " LastY:" lpy)
    if(((mnx:=x-lpx+mx) > 0 || mnx > mx) && ((mny:=y-lpy+my) > 0 || mny > my) && (mnx < A_ScreenWidth-mw || mnx<mx) && (mny < A_ScreenHeight-mh || mny<my))
-   ;~ consoleLog(A_ThisFunc ": Moving patterns to x" mx " y" my)
+   ;~ Log(A_ThisFunc ": Moving patterns to x" mx " y" my)
    WinMove, ahk_id %PatHWND%,, %mnx%, %mny%
    lpx:=x, lpy:=y
 }
