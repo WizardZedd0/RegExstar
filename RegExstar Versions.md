@@ -1,9 +1,9 @@
-; ============================================================================
+ 
 Future Items
 	Step through a regular expression.
 	Callout RegEx Functions.
 
-; ============================================================================
+ 
 Versions
 2/9/2016	RegExstar 0.9 - Beta Release
 2/10/2016	RegExstar 0.9.1 - 
