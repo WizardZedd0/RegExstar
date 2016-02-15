@@ -111,8 +111,8 @@ gui, main: add, text, yp xp+155 vRegLimitText, &Limit:
 gui, main: add, edit, yp xp+30 w30 vRegLimit number
 gui, main: add, text, yp xp+35 vRegStartText, &Start Position:
 gui, main: add, edit, yp xp+70 w30 vRegStart gRegStartValidate hwndRSHwnd, %RegStart%
-;~ gui, main: add, Button, hidden yp xp+35 vPatternDetail gPatternDetails, &Pattern Details
-;~ gui, main: add, checkbox, yp xp+5 checked vReplace, Re&place
+
+
 gui, main: add, text, yp xp+35 vCountText gGo, %a_space%    &Count: 
 gui, main: add, edit, yp xp+55 w30 vRegReplaceCount readonly
 gui, main: add, button, yp xp+35 vUndoButton gUndo, &Undo
@@ -134,7 +134,7 @@ LV_ModifyCol(3, "Integer")
 
 ; ===================== ToolBox GUI ================================
 gui, tb: +parentmain +ToolWindow -Caption +hwndTBHWND ;+AlwaysOnTop 
-;~ gui, tb: add, groupbox, Section w500 h500
+
 gui, tb: add, tab2, vOptionsTab h200 w155 -wrap left, Common||Options|Assertions
 gui, tb: tab, 2		; Tab 2 - Options
 width:=100
@@ -153,9 +153,9 @@ gui, tb: add, button,  	xp+%w% yp	wp	gAddOption, P
 gui, tb: add, button,  	xp+%w% yp	wp	gAddOption, S
 gui, tb: add, button,  	xp+%w% yp	wp	gAddOption, C
 ; Options that are unavailable, (when inside a variable they break and the edit control only does `n newlines anyway)
-;~ gui, tb: add, button,  	xs+10 yp+25	wp	gAddOption	disabled, ``n
-;~ gui, tb: add, button,  	xp+%w% yp	wp	gAddOption	disabled, ``r
-;~ gui, tb: add, button,  	xp+%w% yp	wp	gAddOption	disabled, ``a
+
+
+
 
 gui, tb: tab, 1			; Tab 1 - Common
 gui, tb: add, groupbox, section w120 h185
@@ -457,7 +457,7 @@ IfInString, RegMode, Match
 {
    guiControl, main:  hide, RegLimit
    guiControl, main:  hide, RegLimitText
-   ;~ guiControl, main:  hide, Replace
+
    guiControl, main:  hide, RegReplace
    guiControl, main:  hide, UndoButton
    guiControl, main:  show, PatternDetail
@@ -468,7 +468,7 @@ IfInString, RegMode, Match
 else {
    guiControl, main:  show, RegLimit
    guiControl, main:  show, RegLimitText
-   ;~ guiControl, main:  show, Replace
+
    guiControl, main:  show, RegReplace
    guiControl, main:  show, UndoButton
    guiControl, main:  hide, PatternDetail
@@ -526,9 +526,9 @@ else {
                Else Break                     
             }
    }
-   ;~ options:=getNeedleOptions(RegNeedle)
-   ;~ if(options = "")
-      ;~ RegNeedle:= ")" RegNeedle 
+
+
+
    RegReplaceCount:=RegExMatch(RegHaystack, "`n" . getPerformanceNeedle(), Output, RegStart) ; RegReplaceCount is actually position
    if errorlevel
       MsgBox, 16, RegEx Error, %Errorlevel%
@@ -643,7 +643,6 @@ formatRegex(x, toText:=true) {
       x:=options . RegExReplace(RegExReplace(x, "``", "\"), "(?<!\\)""+", """")
    }
 
-   ;~ MsgBox, % x
    return x
 }
 
@@ -719,12 +718,12 @@ ToggleOption(option) {
    }
    else
       needle:=RegNeedle
-      ;~ RegNeedle:= option ")" RegNeedle
+
    Msgbox % " options : " options "`n" 
-   ;~ if(option = "(*ANYCRLF)") {
-         ;~ (substr(needle, 1, 9) = "(ANYCRLF)") ? (needle:=substr(needle, 10)) : (needle:= option . needle)
-   ;~ }
-   ;~ else {
+
+
+
+
       if (options = "")
          options:= option . ")"
       else if (instr(options, option)) {  ; inside options already?
@@ -733,7 +732,7 @@ ToggleOption(option) {
             options:=
       } else
          options:= option . options
-   ;~ }
+
    RegNeedle:=options . needle
    GuiControl, main:, RegNeedle, %RegNeedle%
    return
@@ -794,9 +793,9 @@ showToolBox(show=-1) ; Toggle
       toolboxIsShown:=false
       guicontrol, main: move, MatchLV, h%h%
       autoXYWH("update", "MatchLV")
-      ;~ autoXYWHChildGUI("reset")
-      ;~ gui, main: hide
-      ;~ gui, main: show
+
+
+
    }
 }
 
@@ -898,13 +897,13 @@ WM_MOUSEMOVE()
       }else if(CurrControl = "C") {
          ToolTip % CurrControl " Enables the auto-callout mode."
       }
-      ;~ else if(CurrControl = "``n") {
-         ;~ ToolTip % CurrControl " Switches from the default newline character (``r``n) to a solitary linefeed (``n)`n(Not Supported by RegExstar)"
-      ;~ }else if(CurrControl = "``r") {
-         ;~ ToolTip % CurrControl " Switches from the default newline character (``r``n) to a `nsolitary carriage return (``r).`n(Not Supported by RegExstar)"
-      ;~ }else if(CurrControl = "``a") {
-         ;~ ToolTip % CurrControl " In v1.0.46.06+, ``a recognizes any type of newline`n(Not Supported by RegExstar)"
-      ;~ }
+
+
+
+
+
+
+
     SetTimer, RemoveToolTip, -10000
     return
 
@@ -1042,7 +1041,7 @@ AutoXYWHChildGUI(DimSize, cList*){
    }
   For i, ctrl in cList {
     ctrlID := ctrl
-   ;~ Log("Ctrl " ctrlID " x is " cInfo[ctrlID].x)
+
     If ( cInfo[ctrlID].x = "" ){
       ControlGetPos, ix, iy, iw, ih, , ahk_id %ctrlID%
       ID := DllCall("GetParent", UInt,WinExist("ahk_id" ctrlID)), ID := !ID ? WinExist("ahk_id" ctrlID) : ID  ; Get Parent
@@ -1098,9 +1097,9 @@ WM_MOVE()
    static lpx, lpy
    WinGetPos, x,y,,, ahk_id %MainHWND% 
    WinGetPos, mx, my,mw,mh, ahk_id %PatHWND%
-   ;~ Log(A_ThisFunc ": Lastx:" lpx " LastY:" lpy)
+
    if(((mnx:=x-lpx+mx) > 0 || mnx > mx) && ((mny:=y-lpy+my) > 0 || mny > my) && (mnx < A_ScreenWidth-mw || mnx<mx) && (mny < A_ScreenHeight-mh || mny<my))
-   ;~ Log(A_ThisFunc ": Moving patterns to x" mx " y" my)
+
    WinMove, ahk_id %PatHWND%,, %mnx%, %mny%
    lpx:=x, lpy:=y
 }
