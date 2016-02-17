@@ -19,6 +19,8 @@
 				Added support for multiline option.
 				Various other Bug Fixes and changes.
 
-2/14/2016	RegExstar 0.9.3 (Current) - 
+2/14/2016	RegExstar 0.9.3 - 
 				Added window resizing.
+2/16/2016	RegExstar 0.9.4 (Current) -
+				Added Debugger
 				
