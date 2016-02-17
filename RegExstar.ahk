@@ -416,8 +416,8 @@ IfExist, %path%
 {
    ; ===================== Main GUI =======================
    IniRead, RegHaystack, %path%, Saved, RegHaystack
-
    RegHaystack:=RegExReplace(RegHaystack, "\Q*MLF*\E", "`n")
+   ;~ log(RegHaystack)
    IniRead, RegNeedle, %path%, Saved, RegNeedle
    IniRead, RegMode, %path%, Saved, RegRegMode
    IniRead, RegReplace, %path%, Saved, RegReplace
@@ -434,7 +434,6 @@ path=RegexInit.ini
 IfNotExist, %path%
    FileAppend, [Saved]`n`n[Debug], %path%
    RegHaystack:=RegExReplace(RegHaystack, "`n", "*MLF*")
-   RegHaystack:=RegExReplace(RegHaystack, "(\s)+", $1)
 IniWrite, %RegHaystack%, %path%, Saved, RegHaystack
 IniWrite, % formatRegex(RegNeedle) , %path%, Saved, RegNeedle
    IniWrite, %RegMode%, %path%, Saved, RegRegMode
@@ -1298,10 +1297,9 @@ RegExstarDebugger(Match, CalloutNumber, FoundPos=-1, Haystack="", NeedleRegEx=""
     ; See pcre.txt for descriptions of these fields.
     current_position  := NumGet(A_EventInfo, 16 + A_PtrSize*2, "Int")
    start_match       := NumGet(A_EventInfo, 12 + A_PtrSize*2, "Int")
-   if (skipTo) {
-      if(current_position < skipTo)   ; Short Circuit to skipTo
+   if (skipTo && current_position < skipTo)   ; Short Circuit to skipTo
          return 
-   } else if((Match:=substr(Haystack, start_match+1, current_position-start_match)) = "" && FastMode) ; Nothing matched yet
+   else if((Match:=substr(Haystack, start_match+1, current_position-start_match)) = "" && FastMode) ; Nothing matched yet
       return
    capture_top       := NumGet(A_EventInfo, 20 + A_PtrSize*2, "Int")
    capture_last      := NumGet(A_EventInfo, 24 + A_PtrSize*2, "Int")    
@@ -1349,7 +1347,7 @@ RegExstarDebugger(Match, CalloutNumber, FoundPos=-1, Haystack="", NeedleRegEx=""
         pau:=!pau
     return
     Jumper:
-      InputBox, t, RegEx Jump, Please enter a position to jump the matching to:
+      InputBox, t, RegEx Jump, % "Please enter a position between " current_position " and " hayLen " to jump the matching to:"
       if errorlevel or var is not number
          return
       if(t <= current_position)
