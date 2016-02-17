@@ -1110,7 +1110,10 @@ getPerformanceNeedle(debug=false) {
       MsgBox, 16, Invalid Option, % "Option " substr(options, pos, 2) " is not supported."
       exit
    }
-
+   if(instr(options, "C")) {
+      ShowDebugger(1)
+      return options "(*NO_START_OPT)"  strReplace(RegNeedle, options)
+   }
    if(debug)
       return "C" options (options = "" ? ")" : "") "(*NO_START_OPT)"  strReplace(RegNeedle, options)
    return (options = "" ? ")" : "") RegNeedle
@@ -1318,7 +1321,7 @@ RegExstarDebugger(Match, CalloutNumber, FoundPos=-1, Haystack="", NeedleRegEx=""
     guicontrol, co:, cHay, % SubStr(Haystack, st:=(start_match > 40 ? start_match-40 : 1), start_match-st+1)
         . ">>" Match
         . "<<" SubStr(Haystack, current_position + 1, 40)
-    guicontrol, co:, cNeedle, %  SubStr(NeedleRegEx, 1, pattern_position)
+    guicontrol, co:, cNeedle, %  SubStr(NeedleRegEx, sp:=(pattern_position > 40 ? pattern_position-40 : 1), pattern_position-sp+1)
         . ">>" nItem
         . "<<" SubStr(NeedleRegEx, pattern_position + 1 + next_item_length)
    guicontrol, co:, capture_top, %capture_top%
