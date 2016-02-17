@@ -24,6 +24,8 @@ Released  2/10/2016
 	Match List:
 		See all the matches in the Match ListBox in either mode.
 		Double click on a match to highlight it in the haystack.
+   	Debugger:
+	       	Step through your RegEx and see exactly what the pattern is doing.		
 
 # Other Features 
 	Storage of your favorite RegEx Needles.
@@ -46,5 +48,6 @@ Released  2/10/2016
  	^s: Save A RegEx - 	These files currently only store the chosen name and the needle of the RegEx 
  	^f: Next Match in Match mode
  	f1: Opens RegEx-Quick Reference Docs
+ 	f5: Open Debugger
 	-And of course many of the alt codes
  
