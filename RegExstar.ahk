@@ -986,10 +986,7 @@ WM_MOUSEMOVE()
          ToolTip % CurrControl " Studies the pattern to try improve its performance. This is useful`nwhen a particular pattern (especially a complex one) will`nbe executed many times."
       }else if(CurrControl = "C") {
          ToolTip % CurrControl " Enables the auto-callout mode."
-      } else
-         return
-          SetTimer, RemoveToolTip, -10000
-
+      }
       ; CALL OUT GUI TOOLTIPS
       }else if (CurrGui = "co") {
          if(instr(CurrControl, "icons")) {
@@ -1027,10 +1024,9 @@ WM_MOUSEMOVE()
          ToolTip % "The number of Call Outs made during this RegEx."
       } else if(CurrControl = "FastMode") {
          ToolTip % "Skips sleeping unless a potential match is found."
-      } 
-         return
-      }
+      } }
       ; END CALL OUT GUI TOOLTIPS
+      SetTimer, RemoveToolTip, -10000
     return
 
     RemoveToolTip:
