@@ -21,6 +21,9 @@
 
 2/14/2016	RegExstar 0.9.3 - 
 				Added window resizing.
-2/16/2016	RegExstar 0.9.4 (Current) -
+				
+2/16/2016	RegExstar 0.9.4 -
 				Added Debugger
 				
+2/17/2016	RegExstar 0.9.4.1 (Current) - 
+				Multiline Needle and Floating Toolbox.
