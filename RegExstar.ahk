@@ -49,7 +49,6 @@
 ; =====================================================================================================
 #NoEnv
 #SingleInstance, force
-#include C:\Users\Robert\Documents\AutoHotkey\Lib\Log.ahk
 SetWorkingDir, %a_scriptdir%
 OnExit, WriteIni
 RegStart:=1
@@ -415,7 +414,7 @@ IfExist, %path%
    ; ===================== Main GUI =======================
    IniRead, RegHaystack, %path%, Saved, RegHaystack
    RegHaystack:=RegExReplace(RegHaystack, "\Q*MLF*\E", "`n")
-   ;~ log(RegHaystack)
+
    IniRead, RegNeedle, %path%, Saved, RegNeedle
    IniRead, RegMode, %path%, Saved, RegRegMode
    IniRead, RegReplace, %path%, Saved, RegReplace
@@ -849,7 +848,7 @@ showToolBox(show=-1) ; Toggle
       ;~ guicontrol, main: move, MatchLV, h%h%
       ;~ GuiControlGet, pos , main: pos, MatchLV
       y += h-250 , x += w-180
-      log(h)
+
       ;~ autoXYWH("update", "MatchLV")
       toolboxIsShown:=true
       gui, tb: show, x%x% y%y% , ToolBox		
@@ -1233,12 +1232,12 @@ moveGUIWithOwner(ownerID, guiIDs*) {
       return
    WinGetPos, x,y,,, ahk_id %ownerID% 
    for i, g in guids {
-      log(g)
+
       If (g && WinExist("ahk_id" g))
       {
       WinGetPos, mx, my,mw,mh, ahk_id %g%
       WinGetTitle, title, ahk_id %g%
-      log(title)
+
       if(((mnx:=x-lpx+mx) > 0 || mnx > mx) && ((mny:=y-lpy+my) > 0 || mny > my) && (mnx < A_ScreenWidth-mw || mnx<mx) && (mny < A_ScreenHeight-mh || mny<my))
          WinMove, ahk_id %g%,, %mnx%, %mny%
       }
