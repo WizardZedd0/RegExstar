@@ -49,7 +49,7 @@
 ; =====================================================================================================
 #NoEnv
 #SingleInstance, force
-
+#include C:\Users\Robert\Documents\AutoHotkey\Lib\Log.ahk
 SetWorkingDir, %a_scriptdir%
 OnExit, WriteIni
 RegStart:=1
@@ -96,16 +96,16 @@ gui, main: +hwndMainHWND +Resize
 GroupAdd, RegExstarWin, ahk_id %MainHWND%
 gui, main: menu, myMenu
 gui, main: add, text, y5 section, &Needle:
-gui, main: font, s13
-gui, main: add, edit, yp xp+45 w525 vRegNeedle hwndRegNeedleHWND
+gui, main: font, s10
+gui, main: add, edit, yp xp+45 w525 r3 -WantReturn vRegNeedle hwndRegNeedleHWND
 guicontrol, main:, RegNeedle, %RegNeedle%
 gui, main: font, s8
 gui, main: add, button, ys xs+570 vGoGo gGo, &Go
 gui, main: add, button, yp+10 xp+60 w100 center default vUpdateMatches gUpdateLV, Update &Matches
 if(RegMode = "Match:")
-   gui, main: add, ddl, xs ys+40 w65 vRegMode gSwitchRegMode, Replace:|Match:||
+   gui, main: add, ddl, xs ys+60 w65 vRegMode gSwitchRegMode, Replace:|Match:||
 else
-   gui, main: add, ddl, xs ys+40 w65 vRegMode gSwitchRegMode, Replace:||Match:
+   gui, main: add, ddl, xs ys+60 w65 vRegMode gSwitchRegMode, Replace:||Match:
 val = 
 gui, main: add, edit, yp xp+65 w150 vRegReplace, %RegReplace%
 gui, main: add, edit, yp xp w150 vRegMatch, %RegMatch%
@@ -137,7 +137,7 @@ LV_ModifyCol(2, "Integer")
 LV_ModifyCol(3, "Integer")
 
 ; ===================== ToolBox GUI ================================
-gui, tb: +parentmain +ToolWindow -Caption +hwndTBHWND ;+AlwaysOnTop 
+gui, tb: +ownermain +ToolWindow +hwndTBHWND ;+AlwaysOnTop 
 GroupAdd RegExstarWin, ahk_id %TBHWND%
 gui, tb: add, tab2, vOptionsTab h200 w155 -wrap left, Common||Options|Assertions
 gui, tb: tab, 2		; Tab 2 - Options
@@ -227,10 +227,8 @@ gui, co: add, edit, yp xp+80 vcapture_last ReadOnly w30
 gui, co: add, link, yp xp+50,See <a href="http://www.pcre.org/pcre.txt">pcre.org</a> for details
 gui, co: add, text, yp xp+170 , Haystack Length:
 gui, co: add, edit, yp xp+110 vhayLen ReadOnly w50 
-
-
 ; ===================================================================================
-
+moveGUIWithOwner(MainHWND, COHWND, PatHWND, TBHWND)
 
 OpenRegExstar: ; Tray menu to open GUI
 gui, main: show,, RegExstar
@@ -506,12 +504,12 @@ AutoXYWH("wh", "RegHaystack")
 AutoXYWH("w", "RegNeedle") ;"RegMatch", "RegReplace")
 AutoXYWH("xh", "MatchLV")
 AutoXYWH("x", "GoGo", "UpdateMatches")
-if(toolboxIsShown) {
-   if(a_guiheight < 290)
-      ShowToolbox(false)
-   else
-      AutoXYWHChildGUI("xy", TBHWND)
-}
+;~ if(toolboxIsShown) {
+   ;~ if(a_guiheight < 290)
+      ;~ ShowToolbox(false)
+   ;~ else
+      ;~ AutoXYWHChildGUI("xy", TBHWND)
+;~ }
 return
 
 ; Control - Shift - R
@@ -840,30 +838,28 @@ ShowSubPatterns(show=-1) ; Toggle
 showToolBox(show=-1) ; Toggle
 {
    global
-      winGetPos, x, y,, h, ahk_id %MainHWND%
    if(!toolboxIsShown && show != 0){
       menu, ViewMenu, check, ToolBox
-
-      if(h < 350) {
-
-         h:=400
-         WinMove, ahk_id %MainHWND%, , %x%, %y%,, %h%
-      }
-      h-=310	; 200 for tb 50 for button
-      guicontrol, main: move, MatchLV, h%h%
-      GuiControlGet, pos , main: pos, MatchLV
-      h+=40, posx-=15
-      autoXYWH("update", "MatchLV")
+      winGetPos, x, y, w, h, ahk_id %MainHWND%
+      ;~ if(h < 350) {
+         ;~ h:=400
+         ;~ WinMove, ahk_id %MainHWND%, , %x%, %y%,, %h%
+      ;~ }
+      	; 200 for tb 50 for button
+      ;~ guicontrol, main: move, MatchLV, h%h%
+      ;~ GuiControlGet, pos , main: pos, MatchLV
+      y += h-250 , x += w-180
+      log(h)
+      ;~ autoXYWH("update", "MatchLV")
       toolboxIsShown:=true
-      gui, tb: show, x%posx% y%h%, ToolBox		
-      autoXYWHChildGUI("reset xy", TBHWND)
+      gui, tb: show, x%x% y%y% , ToolBox		
+      ;~ autoXYWHChildGUI("reset xy", TBHWND)
    } else if (toolboxIsShown && show < 1){
       menu, ViewMenu, UnCheck, ToolBox
       gui, tb: hide
-      h-=110
       toolboxIsShown:=false
-      guicontrol, main: move, MatchLV, h%h%
-      autoXYWH("update", "MatchLV")
+      ;~ guicontrol, main: move, MatchLV, h%h%
+      ;~ autoXYWH("update", "MatchLV")
    }
 }
 
@@ -1219,38 +1215,30 @@ InsertIntegerAtAddress(pInteger, pAddress, pOffset = 0, pSize = 4)
 ; =========================================================
 WM_MOVE()
 {
-   global MainHWND, PatHWND, ShowPatterns, COHWND, DebuggerIsShown
+   global 
    if(a_gui != "main")
       return
-   moveGUIWithOwner(MainHWND, DebuggerIsShown ? COHWND : "", ShowPatterns ? PatHWND : "")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   ;~ moveGUIWithOwner(MainHWND, DebuggerIsShown ? COHWND : "", ShowPatterns ? PatHWND : "")
+   moveGUIWithOwner(MainHWND)
 }
 
 moveGUIWithOwner(ownerID, guiIDs*) {
    static lpx, lpy
+   static guids:={}
+   for i, g in guiIDs {
+      guids[i]:=g
+      i++
+   }
    IfWinNotExist, ahk_id %ownerID%
       return
    WinGetPos, x,y,,, ahk_id %ownerID% 
-   for i, g in guiIDs {
-
+   for i, g in guids {
+      log(g)
       If (g && WinExist("ahk_id" g))
       {
       WinGetPos, mx, my,mw,mh, ahk_id %g%
+      WinGetTitle, title, ahk_id %g%
+      log(title)
       if(((mnx:=x-lpx+mx) > 0 || mnx > mx) && ((mny:=y-lpy+my) > 0 || mny > my) && (mnx < A_ScreenWidth-mw || mnx<mx) && (mny < A_ScreenHeight-mh || mny<my))
          WinMove, ahk_id %g%,, %mnx%, %mny%
       }
@@ -1371,8 +1359,5 @@ RegExstarDebugger(Match, CalloutNumber, FoundPos=-1, Haystack="", NeedleRegEx=""
       return
       Finish:
    RegExstarDebugger("Jump", "CMD") 
-
-
-
    return
 }
