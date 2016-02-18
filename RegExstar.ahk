@@ -1,6 +1,6 @@
 ; Title = RegExstar
 ; Author = WizardZedd
-; Version = 0.9.4
+; Version = 0.9.4.1
 ; Released = 2/10/2016
 
 ; ======================================= RegExstar ===================================================
