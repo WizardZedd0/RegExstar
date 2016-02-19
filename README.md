@@ -34,7 +34,9 @@ Released  2/10/2016
 	Copy Code - Copies the command to the clipboard.
  	Conversion between text and var regex. (` to \, "" to ") 
 	Toolbox of Regular Expressions
- 
+
+# Pitfalls
+	Due to the nature of edit controls all newlines are interpreted as `n or \n. Accordingly, RegExstar always uses the `n option in order to support the multiline option, and does not provide support for other newline options such as `a, `r, etc. However, when actually using the code one must be aware of what type of newline they are dealing with. The multiline option or the \n may perform differently inside of other applications than they would inside of RegExstar.
 
 # GUI 
  To open Gui, 
